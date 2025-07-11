@@ -2,6 +2,13 @@
 
 A minimal, fast, and type-safe link bookmarking app built with the bun create bhvr stack. Save, organize, and filter your favorite links—all with end-to-end type safety and blazing-fast performance.
 
+✅ Project Structure Overview
+
+    ├── client/   → React + Tailwind frontend
+    ├── server/   → Hono backend with Hono RPC
+    ├── shared/   → Shared types/schemas using Zod
+    ├── .gitignore, LICENSE, README.md, etc.
+
 
 🚀 Tech Stack
 

@@ -5,39 +5,39 @@ A minimal, fast, and type-safe link bookmarking app built with the bun create bh
 
 🚀 Tech Stack
 
-    Bun – ultra-fast JavaScript runtime
+Bun – ultra-fast JavaScript runtime
 
-    Hono – lightweight web framework for building edge-ready APIs
+Hono – lightweight web framework for building edge-ready APIs
 
-    Hono RPC – type-safe API communication between backend and frontend
+Hono RPC – type-safe API communication between backend and frontend
 
-    React + Tailwind CSS – modern UI with utility-first styling
+React + Tailwind CSS – modern UI with utility-first styling
 
-    Zod – schema validation for input safety
+Zod – schema validation for input safety
 
-    SQLite (via Drizzle ORM) – local, lightweight database
+SQLite (via Drizzle ORM) – local, lightweight database
 
 ✅ Features
 
-    Add and manage links with tags
+Add and manage links with tags
 
-    Filter by tag or search text
+Filter by tag or search text
 
-    Full-stack type safety with Hono RPC client
+Full-stack type safety with Hono RPC client
 
-    Beautiful, minimal UI with Tailwind
+Beautiful, minimal UI with Tailwind
 
-    Fast startup & build times using Bun
+Fast startup & build times using Bun
 
 🛠 Coming Soon
 
-    Auth (optional)
+Auth (optional)
 
-    Cloud deployment (Vercel/Cloudflare)
+Cloud deployment (Vercel/Cloudflare)
 
-    Tag autocomplete
+Tag autocomplete
 
-    Dark mode
+Dark mode
 
 Run the project
 ```

@@ -5,4 +5,4 @@ export type ApiResponse<T  = undefined >  = {
     data: T;
 }
 
-export * from "./types/link";
+export * from "./link";

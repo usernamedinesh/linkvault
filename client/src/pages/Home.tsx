@@ -1,51 +1,96 @@
-//how to show sidebar here 
-
-import Sidebar from "../components/Sidebar";
-import {useState} from "react";
+import { useState, useEffect, useCallback } from 'react';
+import { HiMenuAlt3 } from 'react-icons/hi';      // mobile hamburger icon
+import Sidebar from '../components/Sidebar';
 
 function Home() {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
-    const clicked = () => {
-        return <Sidebar />
-    }
-    const handleMouseMove = (e) => {
-        if (e.clientX <= 1){
-            setIsSidebarOpen(true);
-        } 
-    }
-    const handleMouseLeave = () => {
-        setIsSidebarOpen(false);
-    }
+  /* ---------------- state ---------------- */
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile]           = useState(false);
 
-    return (
-<div
-            onMouseMove={handleMouseMove}
-            style={{ height: "100vh" }}
-            className="flex gap-0 bg-gray-100"
-        >
-            {/* Sidebar Container */}
-            <div
-                onMouseLeave={handleMouseLeave}
-                className={`transition-all duration-500 ease-in-out
-                    ${isSidebarOpen ? 'w-64 opacity-100 scale-100' : 'w-0 opacity-0 scale-95'}
-                    overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900
-                    text-white shadow-lg rounded-r-md transform
-                    backdrop-blur-sm`}
-                style={{
-                    transitionProperty: 'width, opacity, transform',
-                }}
-            >
-                <Sidebar />
-            </div>
+  /* detect < 768 px so we can tell Sidebar it’s on “mobile” */
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768);
+    update();                                // run once on mount
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
-            {/* Main Content */}
-            <div className="flex-1 p-6">
-                <h1 className="text-3xl font-bold text-gray-800">Home page</h1>
-                <p className="mt-2 text-gray-500">Sidebar will show here smoothly and cleanly.</p>
-            </div>
-        </div>
-    )
+  /* helpers */
+  const open   = useCallback(() => setIsSidebarOpen(true),  []);
+  const close  = useCallback(() => setIsSidebarOpen(false), []);
+  const toggle = useCallback(() => setIsSidebarOpen(p => !p), []);
+
+  /* desktop: open when mouse hits far-left edge */
+  const handleMouseMove  = e => { if (!isMobile && e.clientX <= 1) open(); };
+  const handleMouseLeave = () => { if (!isMobile) close(); };
+
+  return (
+    <div
+      onMouseMove={handleMouseMove}
+      style={{ height: '100vh' }}
+      className="flex bg-gray-100 relative overflow-hidden"
+    >
+      {/* ─────────── SIDEBAR ─────────── */}
+      <div
+        onMouseLeave={handleMouseLeave}
+        className={`
+          transition-all duration-500 ease-in-out
+          ${isMobile
+            ? `fixed top-0 left-0 z-40 h-full transform
+               ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+               w-64`
+            : `${isSidebarOpen ? 'w-64' : 'w-0'}`
+          }
+          opacity-${isSidebarOpen ? '100' : '0'}
+          scale-${isSidebarOpen ? '100' : '95'}
+          overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900
+          text-white shadow-lg rounded-r-md backdrop-blur-sm
+        `}
+        style={{ transitionProperty: 'width, opacity, transform' }}
+      >
+        <Sidebar onClose={close} isMobile={isMobile} />
+      </div>
+
+      {/* mobile backdrop */}
+      {isMobile && isSidebarOpen && (
+        <div
+          onClick={close}
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm"
+        />
+      )}
+
+      {/* ─────────── MAIN CONTENT ─────────── */}
+       {/* <div className="flex-1 p-6 md:pl-64"> */}
+
+    <div
+      className={`
+        flex-1 p-6 transition-all duration-300
+        ml-2 sm:ml-4              /* ← base gap no matter what */
+        ${isSidebarOpen ? '' : 'sm:ml-20'}   /* ← extra gap only when CLOSED */
+      `}
+    >
+        {/* hamburger only shows on mobile */}
+        {isMobile && (
+          <button
+            onClick={toggle}
+            className="text-3xl mb-4 focus:outline-none"
+            aria-label="Open menu"
+          >
+            <HiMenuAlt3 />
+          </button>
+        )}
+
+        {/* CONTENT */}
+        <h1 className="text-3xl font-bold text-gray-800">Home page</h1>
+
+        <p className="mt-2 text-gray-500">
+          Sidebar now opens on hover (desktop) or with the hamburger icon (mobile),
+          and closes on backdrop tap or X button.
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export default Home;
+

@@ -2,6 +2,7 @@
 
 A minimal, fast, and type-safe link bookmarking app built with the bun create bhvr stack. Save, organize, and filter your favorite links—all with end-to-end type safety and blazing-fast performance.
 
+
 ✅ Project Structure Overview
 
     ├── client/   → React + Tailwind frontend
@@ -23,6 +24,10 @@ A minimal, fast, and type-safe link bookmarking app built with the bun create bh
    * Zod – schema validation for input safety
 
    * SQLite (via Drizzle ORM) – local, lightweight database
+
+   * React-icons - For icons
+
+   * React-router - for routing  
 
 ✅ Features
 

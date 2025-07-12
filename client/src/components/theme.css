@@ -1,0 +1,101 @@
+
+/* ----------  light / dark variables (optional)  ---------- */
+body.light {
+  --bg: #f8fafc;     /* slate-50 */
+  --fg: #1f2937;     /* gray-800 */
+}
+body.dark {
+  --bg: #1f2937;     /* gray-800 */
+  --fg: #f8fafc;     /* slate-50 */
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ----------  toggle layout  ---------- */
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  /* fills full width */
+  gap: 0.75rem;                    /* you can tweak */
+  width: 100%;                     /* full sidebar width  */
+  padding: 0 1rem;                 /* add side breathing room */
+}
+
+/* for same sizing */
+.icon-eq {
+  width: 1.5rem;           /* = 24 px  -> matches the thumb in .slider::before  */
+  height: 1.5rem;
+  font-size: 1.5rem;       /* same visual size for FA glyph */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;    /* clicks pass through to label/checkbox */
+}
+
+/* ---------- Consistent icon sizing ---------- */
+.toggle-container .fa-sun,
+.toggle-container .fa-moon {
+  font-size: 1.25rem;        /* uniform size */
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease;
+  pointer-events: none;
+}
+
+/* ----------  switch shell  ---------- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 3.5rem;             /* 56 px */
+  height: 2rem;              /* 32 px */
+}
+.switch input {
+  opacity: 0;                /* hide checkbox */
+  width: 0;
+  height: 0;
+}
+
+/* ----------  slider track  ---------- */
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #cbd5e1;       /* slate-300 */
+  border-radius: 2rem;
+  transition: background 0.4s ease;
+}
+
+/* ----------  slider thumb  ---------- */
+.slider::before {
+  content: '';
+  position: absolute;
+  height: 1.5rem;            /* 24 px */
+  width: 1.5rem;
+  left: 0.25rem;             /* 4 px */
+  bottom: 0.25rem;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.4s ease;
+}
+
+/* ----------  checked (dark) state  ---------- */
+.switch input:checked + .slider {
+  background: #4f46e5;       /* indigo-600 */
+}
+.switch input:checked + .slider::before {
+  transform: translateX(1.5rem);  /* slide thumb right */
+}
+
+/* ----------  fun icon spin  ---------- */
+.switch input:checked ~ .fa-sun {
+  transform: rotate(-360deg);
+}
+.switch input:not(:checked) ~ .fa-moon {
+  transform: rotate(360deg);
+}

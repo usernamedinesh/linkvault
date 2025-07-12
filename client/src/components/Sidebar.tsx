@@ -1,4 +1,5 @@
 import React from 'react';
+import ThemeToggle from "./ThemeToggle";
 import { NavLink } from 'react-router'; 
 import { FiLogIn, FiUserPlus, FiLogOut, FiHome, FiSettings, FiUsers, FiInfo, FiMail, FiX } from 'react-icons/fi'; // Import icons from react-icons
 
@@ -146,7 +147,9 @@ function Sidebar({ onClose, isMobile }) {
           </li>
         </ul>
       </nav>
-
+        <div className="mb-3">
+            <ThemeToggle/>
+        </div>
       {/* Footer section of the sidebar */}
       <div className="mt-auto pt-6 border-t border-gray-700 text-sm text-gray-400">
         <p>&copy; {new Date().getFullYear()} linkVault. All rights reserved.</p>

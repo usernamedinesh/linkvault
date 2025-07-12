@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { HiMenuAlt3 } from 'react-icons/hi';      // mobile hamburger icon
 import Sidebar from '../components/Sidebar';
+import { useTheme } from "../context/ThemeContext";
 
 function Home() {
   /* ---------------- state ---------------- */
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile]           = useState(false);
+
+  const { theme } = useTheme();
 
   /* detect < 768 px so we can tell Sidebar it’s on “mobile” */
   useEffect(() => {
@@ -28,8 +31,12 @@ function Home() {
     <div
       onMouseMove={handleMouseMove}
       style={{ height: '100vh' }}
-      className="flex bg-gray-100 relative overflow-hidden"
-    >
+      className={`
+        flex relative overflow-hidden
+        transition-colors duration-500 ease-in-out
+        ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-300 text-gray-900'}
+      `}
+        >
       {/* ─────────── SIDEBAR ─────────── */}
       <div
         onMouseLeave={handleMouseLeave}
@@ -45,6 +52,7 @@ function Home() {
           scale-${isSidebarOpen ? '100' : '95'}
           overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900
           text-white shadow-lg rounded-r-md backdrop-blur-sm
+
         `}
         style={{ transitionProperty: 'width, opacity, transform' }}
       >
@@ -81,9 +89,9 @@ function Home() {
         )}
 
         {/* CONTENT */}
-        <h1 className="text-3xl font-bold text-gray-800">Home page</h1>
+        <h1 className="text-3xl font-bold ">Home page</h1>
 
-        <p className="mt-2 text-gray-500">
+        <p className="mt-2 ">
           Sidebar now opens on hover (desktop) or with the hamburger icon (mobile),
           and closes on backdrop tap or X button.
         </p>

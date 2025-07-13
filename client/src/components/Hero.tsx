@@ -145,11 +145,9 @@ const HomePage: React.FC = () => {
                     Cancel
                 </button>
             }
-            <div className="">
                 <LinkList />
-            </div>
 
-        <footer className="mb-1 text-sm text-gray-500 text-center">
+        <footer className="h-10 mb-10 text-sm text-white text-center">
           Built with ❤️ by You • © 2025 LinkVault
         </footer>
         </div>

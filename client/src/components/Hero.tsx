@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import LinkList from "./LinkList";
 import {useTheme} from "../context/ThemeContext";
+import Footer from  "./Footer";
 
 type LinkItem = {
     id: number;
@@ -149,11 +150,10 @@ const HomePage: React.FC = () => {
             }
                 <LinkList />
 
-        <footer className={` mt-12 text-sm white:text-black text-center
-        ${theme === 'dark' ? 'text-white' : ''}
-        `}>
-          Built with ❤️ by You • © 2025 LinkVault
-        </footer>
+    {/* push footer to bottom & give it a reliable colour */}
+            <div className="">
+                <Footer />
+            </div>
         </div>
     );
 };

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import LinkList from "./LinkList";
+import {useTheme} from "../context/ThemeContext";
 
 type LinkItem = {
     id: number;
@@ -13,6 +14,7 @@ type LinkItem = {
 const HomePage: React.FC = () => {
     const [links, setLinks] = useState<LinkItem[]>([]);
     const [showForm, setShowForm] = useState(false);
+    const {theme} = useTheme()
 
     const handleAddLink = () => {
         const newLink: LinkItem = {
@@ -147,7 +149,9 @@ const HomePage: React.FC = () => {
             }
                 <LinkList />
 
-        <footer className="h-10 mb-10 text-sm text-white text-center">
+        <footer className={` mt-12 text-sm white:text-black text-center
+        ${theme === 'dark' ? 'text-white' : ''}
+        `}>
           Built with ❤️ by You • © 2025 LinkVault
         </footer>
         </div>

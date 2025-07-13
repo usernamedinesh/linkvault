@@ -37,12 +37,12 @@ function Sidebar({ onClose, isMobile }) {
           {/* Login NavLink */}
           <li>
             <NavLink
-              to="/login" // Target path for the link
+              to="/auth"
               className={({ isActive }) => // Function to apply classes based on active state
                 `flex items-center space-x-3 p-3 rounded-md text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200
                 ${isActive ? 'bg-gray-700 text-white' : ''}` // Apply active styles
               }
-              onClick={isMobile ? onClose : undefined} // Close sidebar on click if on mobile
+              onClick={isMobile ? onClose : undefined} 
             >
               <FiLogIn size={20} /> {/* Login icon */}
               <span>Login</span>
@@ -52,7 +52,7 @@ function Sidebar({ onClose, isMobile }) {
           {/* Signup NavLink */}
           <li>
             <NavLink
-              to="/signup" // Target path for the link
+              to="/auth"
               className={({ isActive }) =>
                 `flex items-center space-x-3 p-3 rounded-md text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200
                 ${isActive ? 'bg-gray-700 text-white' : ''}`

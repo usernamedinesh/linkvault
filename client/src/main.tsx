@@ -5,12 +5,15 @@ import './index.css'
 import router from "./routes";
 import App from './App.tsx'
 import { ThemeProvider } from "./context/ThemeContext";
+import {SidebarProvider} from "./context/SidebarContext";
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <ThemeProvider>
+            <SidebarProvider>
             <App />
             <RouterProvider router = { router } /> 
+            </SidebarProvider>
         </ThemeProvider>
     </StrictMode>,
 )

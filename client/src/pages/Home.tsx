@@ -75,8 +75,8 @@ function Home() {
     <div
       className={`
         flex-1 p-6 transition-all duration-300
-        mx-2 sm:mx-4              /* Equal margin on both sides for all screen sizes */
-        ${isSidebarOpen ? '' : 'sm:mx-20'}  /* Apply larger side margins when sidebar is closed */
+        mx-2 sm:mx-1              /* Equal margin on both sides for all screen sizes */
+        ${isSidebarOpen ? '' : 'sm:mx-1'}  /* Apply larger side margins when sidebar is closed */
       `}
     >
         {/* hamburger only shows on mobile */}

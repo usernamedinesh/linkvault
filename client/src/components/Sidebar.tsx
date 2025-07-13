@@ -52,7 +52,7 @@ function Sidebar({ onClose, isMobile }) {
           {/* Signup NavLink */}
           <li>
             <NavLink
-              to="/auth"
+              to="/forgot-password"
               className={({ isActive }) =>
                 `flex items-center space-x-3 p-3 rounded-md text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200
                 ${isActive ? 'bg-gray-700 text-white' : ''}`

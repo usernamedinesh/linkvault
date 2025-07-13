@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { HiMenuAlt3 } from 'react-icons/hi';      // mobile hamburger icon
 import Sidebar from '../components/Sidebar';
 import { useTheme } from "../context/ThemeContext";
+import Hero from "../components/Hero";
 
 function Home() {
   /* ---------------- state ---------------- */
@@ -89,12 +90,7 @@ function Home() {
         )}
 
         {/* CONTENT */}
-        <h1 className="text-3xl font-bold ">Home page</h1>
-
-        <p className="mt-2 ">
-          Sidebar now opens on hover (desktop) or with the hamburger icon (mobile),
-          and closes on backdrop tap or X button.
-        </p>
+        <Hero/>
       </div>
     </div>
   );

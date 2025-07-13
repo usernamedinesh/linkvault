@@ -1,7 +1,7 @@
 import React from 'react';
 import ThemeToggle from "./ThemeToggle";
 import { NavLink } from 'react-router'; 
-import { FiLogIn, FiUserPlus, FiLogOut, FiHome, FiSettings, FiUsers, FiInfo, FiMail, FiX } from 'react-icons/fi'; // Import icons from react-icons
+import { FiLock,FiLogIn, FiUserPlus, FiLogOut, FiHome, FiSettings, FiUsers, FiInfo, FiMail, FiX } from 'react-icons/fi'; // Import icons from react-icons
 
 /**
  * Sidebar component for navigation.
@@ -45,7 +45,7 @@ function Sidebar({ onClose, isMobile }) {
               onClick={isMobile ? onClose : undefined} 
             >
               <FiLogIn size={20} /> {/* Login icon */}
-              <span>Login</span>
+              <span>Login / signup</span>
             </NavLink>
           </li>
 
@@ -59,8 +59,8 @@ function Sidebar({ onClose, isMobile }) {
               }
               onClick={isMobile ? onClose : undefined} // Close sidebar on click if on mobile
             >
-              <FiUserPlus size={20} /> {/* Signup icon */}
-              <span>Signup</span>
+              <FiLock size={20} /> {/* forgot password icon */}
+              <span>forgot password</span>
             </NavLink>
           </li>
 

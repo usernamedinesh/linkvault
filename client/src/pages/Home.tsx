@@ -71,11 +71,12 @@ function Home() {
       {/* ─────────── MAIN CONTENT ─────────── */}
        {/* <div className="flex-1 p-6 md:pl-64"> */}
 
+
     <div
       className={`
         flex-1 p-6 transition-all duration-300
-        ml-2 sm:ml-4              /* ← base gap no matter what */
-        ${isSidebarOpen ? '' : 'sm:ml-20'}   /* ← extra gap only when CLOSED */
+        mx-2 sm:mx-4              /* Equal margin on both sides for all screen sizes */
+        ${isSidebarOpen ? '' : 'sm:mx-20'}  /* Apply larger side margins when sidebar is closed */
       `}
     >
         {/* hamburger only shows on mobile */}

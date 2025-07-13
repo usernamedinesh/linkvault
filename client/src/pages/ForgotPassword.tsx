@@ -1,9 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from "react-router";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+    const token = "this_is_my_Token";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,6 +23,8 @@ const ForgotPassword: React.FC = () => {
         //if reponse is ok then navigate to the page
         //where use can add new password
       setSent(true);
+      navigate(`/new-password/${token}`)
+      
     } catch (err) {
       setError('Something went wrong. Please try again.');
     }

@@ -3,6 +3,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import AuthPage from "./components/AuthPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import NewPassword from "./components/NewPassword";
 
 const router = createBrowserRouter ([
     {
@@ -13,6 +15,16 @@ const router = createBrowserRouter ([
         path : "/auth",
         element: <AuthPage />
     },
+    {
+        path : "/forgot-password",
+        element: <ForgotPassword />
+    },
+    //dynamic page for new-password-page
+    {
+        path : "/new-password/:token",
+        element: <NewPassword />
+    },
+
     {
         path: "*",
         element : (

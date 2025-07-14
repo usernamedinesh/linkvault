@@ -6,6 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "bun --watch run src/index.ts && tsc --watch"
+    "migrate:gen": "drizzle-kit generate:pg",
+    "migrate:push": "drizzle-kit push"
   },
   "dependencies": {
     "hono": "^4.7.11",

@@ -1,19 +1,19 @@
 import {
   pgTable,
   integer,
-  identity,
+  serial,
   varchar,
   timestamp,
   text,
-  relations,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm"; // ✅ FIXED
 
 // USERS TABLE
 export const users = pgTable(
   "users",
   {
-    id: identity("id").primaryKey(),
+    id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
     email: varchar("email", { length: 256 }).notNull(),
     password: varchar("password", { length: 256 }).notNull(),
@@ -26,7 +26,7 @@ export const users = pgTable(
 
 // LINKS TABLE
 export const links = pgTable("links", {
-  id: identity("id").primaryKey(),
+  id: serial("id").primaryKey(),
   userId: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),

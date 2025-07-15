@@ -33,7 +33,7 @@ A minimal, fast, and type-safe link bookmarking app built with the bun create bh
 
    * Add and manage links with tags
 
-   * Filter by tag or search text
+   * Auth 
 
    * Full-stack type safety with Hono RPC client
 
@@ -41,15 +41,16 @@ A minimal, fast, and type-safe link bookmarking app built with the bun create bh
 
    * Fast startup & build times using Bun
 
-🛠 Coming Soon
+   * Dark mode
 
-   * Auth (optional)
+🛠 Coming Soon
 
    * Cloud deployment (Vercel/Cloudflare)
 
    * Tag autocomplete
 
-   * Dark mode
+   * Filter by tag or search text
+
 
 
 📦 Run the project 
@@ -68,7 +69,6 @@ A minimal, fast, and type-safe link bookmarking app built with the bun create bh
 Run this to generate your SQL migration from the schema:
 ```
     bunx drizzle-kit generate
-
 ```
   This will read your schema and create SQL migration files inside ./drizzle/migrations.
 

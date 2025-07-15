@@ -59,6 +59,24 @@ A minimal, fast, and type-safe link bookmarking app built with the bun create bh
   bun run dev          # Start all
 ```
 
+✅ Run the docker-compose
+```
+    docker-compose up -d
+```
+
+✅ Create Migration
+Run this to generate your SQL migration from the schema:
+```
+    npx drizzle-kit generate
+```
+  This will read your schema and create SQL migration files inside ./drizzle/migrations.
+
+✅ Apply the Migration to the Database
+```
+npx drizzle-kit migrate
+```
+  This will apply the migration and create the actual users and links tables in your PostgreSQL database.
+
 📄 License
 
 MIT – feel free to fork, remix, and improve.

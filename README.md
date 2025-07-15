@@ -67,15 +67,17 @@ A minimal, fast, and type-safe link bookmarking app built with the bun create bh
 ✅ Create Migration
 Run this to generate your SQL migration from the schema:
 ```
-    npx drizzle-kit generate
+    bunx drizzle-kit generate
+
 ```
   This will read your schema and create SQL migration files inside ./drizzle/migrations.
 
-✅ Apply the Migration to the Database
+✅ Apply the Migration to the Database(no need it will done automatically)
 ```
-npx drizzle-kit migrate
+    bunx drizzle-kit migrate
 ```
   This will apply the migration and create the actual users and links tables in your PostgreSQL database.
+    
 
 📄 License
 

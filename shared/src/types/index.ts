@@ -2,7 +2,7 @@ export type ApiResponse<T  = undefined >  = {
     message: string;
     success: true;
     status: number;
-    data: T;
+    data?: T;
 }
 
 //exportable  files are here 

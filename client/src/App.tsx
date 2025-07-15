@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import beaver from './assets/beaver.svg'
-import { hcWithType } from 'server/dist/client'
+// import { hcWithType } from 'server/dist/client'
+import { hcWithType } from "../../server/dist/client";
 import { Routes, Route } from "react-router";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";

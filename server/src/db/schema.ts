@@ -33,7 +33,8 @@ export const links = pgTable("links", {
   title: varchar("title", { length: 512 }).notNull(),
   url: varchar("url", { length: 2048 }).notNull(),
   tag: varchar("tag", { length: 100 }),
-  publishedAt: timestamp("published_at", { withTimezone: true }),
+  publishedAt: timestamp("published_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 // RELATIONS

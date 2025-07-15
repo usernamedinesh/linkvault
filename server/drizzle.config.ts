@@ -8,8 +8,8 @@ export default {
     out: "./drizzle/migrations",
     driver: "pg",
     dbCredentials: {
-        host: "localhost", 
-        port: 5432,
+        host: process.env.HOST!,
+        port: process.env.DB_PORT!,
         user: process.env.POSTGRES_USER!,
         password: process.env.POSTGRES_PASSWORD!,
         database: process.env.POSTGRES_DB!,

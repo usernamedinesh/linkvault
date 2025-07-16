@@ -1,8 +1,9 @@
 export class AppError extends Error {
   public readonly statusCode: number;
   public readonly isOperational: boolean;
+  public readonly details?: any;
 
-  constructor(message: string, statusCode = 500) {
+  constructor(message: string, statusCode = 500, details?: any) {
     super(message);
 
     // Restore prototype chain (important when extending built-ins like Error in TypeScript)
@@ -10,6 +11,7 @@ export class AppError extends Error {
 
     this.name = this.constructor.name;
     this.statusCode = statusCode;
+    this.details = details;
     this.isOperational = true; // Optional: helps with distinguishing known vs unknown errors
 
     Error.captureStackTrace(this, this.constructor);

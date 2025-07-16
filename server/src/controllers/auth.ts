@@ -1,12 +1,12 @@
-import { loginSchema, signupSchema, forgotPasswordSchema, newPasswordSchemaServer, type Login, type Signup, type ForgotPassword type  } from "shared";
+import { loginSchema, signupSchema, forgotPasswordSchema, newPasswordSchemaServer, type Login, type Signup, type ForgotPassword } from "shared";
 import type { ApiResponse, ApiError } from "shared";
 import { apiSuccess, apiError, jsonResponse } from "../utils/apiResponse";
 import { AppError } from "../utils/CustomError";
 import { findUserByEmail, createUser } from "../db/queries/user";
+import { saveToken, validateExpiryAndToken, deleteToken, saveNewPassword } from "../db/queries/passwordreset";
 import { generate_token } from "../utils/token";
 import bcrypt from "bcrypt";
 import { ZodError } from 'zod';
-imprort { saveToken, validateExpiryAndToken, deleteToken, saveNewPassword } from " ../db/queries/password_reset"
 
 // create new user 
 export async function signup(req: Request): Promise<Response> {

@@ -89,7 +89,7 @@ export const newPasswordSchemaServer = z
     token: z.string().min(10),
   })
   .strict()
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });

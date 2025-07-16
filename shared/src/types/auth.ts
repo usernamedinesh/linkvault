@@ -73,3 +73,25 @@ export const newPasswordSchema = z
 
 export type NewPassword = z.infer<typeof newPasswordSchema>;
 
+
+export const newPasswordSchemaServer = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .max(100)
+      .regex(passwordRegex, {
+        message:
+          "Password must include uppercase, lowercase, number, and special character",
+      }),
+    confirmPassword: z.string().min(8).max(100),
+    email: z.string().email(),
+    token: z.string().min(10),
+  })
+  .strict()
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type NewPasswordServer = z.infer<typeof newPasswordSchemaServer>;

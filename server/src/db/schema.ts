@@ -24,6 +24,15 @@ export const users = pgTable(
   })
 );
 
+// ResetPasswordToken Table
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  token: varchar("token", { length: 256 }).notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
 // LINKS TABLE
 export const links = pgTable("links", {
   id: serial("id").primaryKey(),

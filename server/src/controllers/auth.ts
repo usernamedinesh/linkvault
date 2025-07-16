@@ -5,15 +5,25 @@ import { AppError } from "../utils/CustomError";
 import { findUserByEmail, createUser } from "../db/queries/user";
 import { generate_token } from "../utils/token";
 import bcrypt from "bcrypt";
+import { ZodError } from 'zod';
 
 // create new user 
 export async function signup(req: Request): Promise<Response> {
     try {
-        const body = await req.json();
+
+        const body = await req.get("body");
         const parsed = signupSchema.safeParse(body);
 
         if (!parsed.success) {
-            return jsonResponse(apiError("Invalid input!", 400), 400);
+          const issues = parsed.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message
+          }));
+
+          return jsonResponse(
+            apiError("Invalid input", 400, { issues }),
+            400
+          );
         }
 
         const { name, email, password } = parsed.data;
@@ -43,11 +53,20 @@ export async function signup(req: Request): Promise<Response> {
 //login in user
 export async function login(req: Request): Promise<Response> {
     try {
-        const body = await req.json();
+        const body = await req.get("body");
         const parsed = loginSchema.safeParse(body);
 
+        
         if (!parsed.success) {
-            return jsonResponse(apiError("Invalid input!", 400), 400);
+          const issues = parsed.error.issues.map((issue) => ({
+            field: issue.path.join('.'),
+            message: issue.message
+          }));
+
+          return jsonResponse(
+            apiError("Invalid input", 400, { issues }),
+            400
+          );
         }
 
         const { email, password } = parsed.data;

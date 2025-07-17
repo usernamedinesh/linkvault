@@ -70,6 +70,12 @@ export async function get_link(c: Context): Promise<Response> {
             return jsonResponse(apiError("Invalid user", 401), 401);
         }
         const links = await getLink(userId);
+        if (!links || links.length === 0) {
+            return jsonResponse(
+                apiSuccess({}, "No User links found."),
+                200
+            );
+        }
 
         return jsonResponse(
             apiSuccess({ links }, "User links fetched successfully."),

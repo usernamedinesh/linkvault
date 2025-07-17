@@ -8,6 +8,6 @@ auth.post("/signup", signup);
 auth.post("/login", login);
 auth.post("/forgot-password", forgot_password);
 auth.post("/new-password", new_password);
-auth.get("/profile/:userId", authMiddleware, get_profile);
+auth.get("/profile/:userId?", authMiddleware, get_profile);
 
 export default auth;

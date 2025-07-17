@@ -1,10 +1,22 @@
 import { dbPromise } from "../index";
 import { links, users } from "../schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 // Create a new link
 export async function createLink(title: string, url: string, tag: string, userId: number) {
   const db = await dbPromise;
+
+ // 🔍 Check if a link with this title already exists for the user
+  const existing = await db
+    .select()
+    .from(links)
+    .where(and(eq(links.title, title), eq(links.userId, userId)))
+    .limit(1);
+
+  if (existing.length > 0) {
+    // 🚫 Title already exists for this user
+    return null;
+  }
 
   const inserted = await db
     .insert(links)

@@ -36,5 +36,6 @@ async function initDb() {
 }
 
 export const dbPromise = initDb();
+export default dbPromise;
 // have to use like this 
 //import { dbPromise } from "./index";

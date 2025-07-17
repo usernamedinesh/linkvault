@@ -40,6 +40,9 @@ export async function create_link(c: Context): Promise<Response> {
         }
 
         const new_link = await createLink(title, url, tags, userId) 
+        if (!new_link) {
+            return jsonResponse(apiError("title already exist", 401), 401);
+        }
 
         return jsonResponse(
             apiSuccess(

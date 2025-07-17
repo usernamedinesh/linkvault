@@ -2,14 +2,13 @@ import { useState } from 'react';
 import LinkList from "./LinkList";
 import {useTheme} from "../context/ThemeContext";
 import Footer from  "./Footer";
+import { client } from "../lib/client";
 
 type LinkItem = {
     id: number;
     url: string;
-    name: string;
-    tag?: string;
-    updatedAt: string;
-    createdAt: string;
+    title: string;
+    tags?: string;
 };
 
 const HomePage: React.FC = () => {
@@ -21,23 +20,19 @@ const HomePage: React.FC = () => {
         const newLink: LinkItem = {
             id: Date.now(),
             url: '',
-            name: '',
-            tag: '',
-            updatedAt: new Date().toLocaleString(),
-            createdAt: new Date().toLocaleString(),
+            title: '',
+            tags: '',
         };
         setLinks((prev) => [...prev, newLink]);
         setShowForm(true);
     };
 
-    const handleCopy = (url: string) => {
+    //TODO: it i wll be paste
+    const handlePaste = (url: string) => {
         navigator.clipboard.writeText(url);
-        alert('Link copied!');
+        alert('Link Pated!');
     };
 
-    const handleEdit = (id: number) => {
-        console.log('Edit link with ID:', id);
-    };
 
     const handleChange = (id: number, field: keyof LinkItem, value: string) => {
         setLinks((prev) =>
@@ -50,8 +45,43 @@ const HomePage: React.FC = () => {
     };
     const handleCancelLink = () => {
         setShowForm(false);
-        setLinks((prev) => prev.filter((link) => link.url !== '' || link.name !== ''));
+        setLinks((prev) => prev.filter((link) => link.url !== '' || link.title !== ''));
     }
+    //api call
+    const handleSaveLink = async () => {
+        const token = localStorage.getItem("linkToken");
+        const lastLink = links[links.length - 1];
+        if (!lastLink) return alert("Link data missing.");
+
+
+        try {
+            const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/link/add-link`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    title: lastLink.title,
+                    url: lastLink.url,
+                    tags: lastLink.tags,
+                }),
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                setShowForm(false);
+                alert(data.message || "Link saved successfully!");
+                console.log("response", data);
+            } else {
+                alert(data.message || "Failed to save link");
+                console.error("error", data);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Network error, please try again.");
+        }
+    };
 
     return (
         <div className="min-h-screen flex flex-col items-center ">
@@ -70,7 +100,7 @@ const HomePage: React.FC = () => {
             <div className="w-full max-w-md space-y-4">
                 {links.map((link, index) => {
                     const isLast = index === links.length - 1;
-                    if (!showForm && isLast && link.url === '' && link.name === '') {
+                    if (!showForm && isLast && link.url === '' && link.title === '') {
                         return null; // don't show the empty form if it's canceled
                     }
 
@@ -91,9 +121,9 @@ const HomePage: React.FC = () => {
                                 />
                                 <button
                                     className="text-sm text-blue-400 hover:underline"
-                                    onClick={() => handleCopy(link.url)}
+                                    onClick={() => handlePaste(link.url)}
                                 >
-                                    [copy]
+                                    [paste]
                                 </button>
                             </div>
 
@@ -102,10 +132,10 @@ const HomePage: React.FC = () => {
                                 <label className="text-sm w-12">Name:</label>
                                 <input
                                     type="text"
-                                    value={link.name}
-                                    onChange={(e) => handleChange(link.id, 'name', e.target.value)}
+                                    value={link.title}
+                                    onChange={(e) => handleChange(link.id, 'title', e.target.value)}
                                     className="flex-1 px-2 py-1 text-black rounded"
-                                    placeholder="Link name"
+                                    placeholder="Link title"
                                 />
                             </div>
 
@@ -114,43 +144,37 @@ const HomePage: React.FC = () => {
                                 <label className="text-sm w-12">Tag:</label>
                                 <input
                                     type="text"
-                                    value={link.tag}
-                                    onChange={(e) => handleChange(link.id, 'tag', e.target.value)}
+                                    value={link.tags}
+                                    onChange={(e) => handleChange(link.id, 'tags', e.target.value)}
                                     className="flex-1 px-2 py-1 text-black rounded"
-                                    placeholder="Optional tag"
+                                    placeholder="Optional tags"
                                 />
                             </div>
 
-                            {/* SAVE + EDIT row */}
-                            <div className="flex items-center justify-between text-sm pt-2">
-                                <span className="text-gray-400">Save:</span>
-                                <button
-                                    onClick={() => handleEdit(link.id)}
-                                    className="text-pink-500 hover:underline"
-                                >
-                                    Edit
-                                </button>
-                            </div>
-
-                            <p className="text-[10px] text-right text-gray-500 italic">
-                                Updated: {link.updatedAt}
-                            </p>
                         </div>
                     );
                 })}
 
             </div>
-            { showForm && 
-                <button
-                    onClick={handleCancelLink}
-                    className="mt-4 rounded bg-pink-600 px-5 py-2 text-white hover:bg-pink-700"
-                >
-                    Cancel
-                </button>
-            }
-                <LinkList />
+            {showForm && (
+                <div className="flex gap-4 mb-5">
+                    <button
+                        onClick={handleSaveLink}
+                        className="mt-4 rounded bg-pink-600 px-5 py-2 text-white hover:bg-pink-700 "
+                    >
+                        Save
+                    </button>
+                    <button
+                        onClick={handleCancelLink}
+                        className="mt-4 rounded bg-pink-600 px-5 py-2 text-white hover:bg-pink-700 "
+                    >
+                        Cancel
+                    </button>
+                </div>
+            )}
+            <LinkList />
 
-    {/* push footer to bottom & give it a reliable colour */}
+            {/* push footer to bottom & give it a reliable colour */}
             <div className="">
                 <Footer />
             </div>

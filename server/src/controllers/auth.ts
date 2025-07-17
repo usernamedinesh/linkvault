@@ -198,9 +198,7 @@ export async function new_password(req: Request): Promise<Response> {
 export async function get_profile(c: Context): Promise<Response> {
   try {
 
-    const users = c.get("user"); // accessing from middleware
-    console.log("user: ", users);
-    const userIdParam = c.req.param('userId');
+    const userIdParam = c.get("userId");
 
     if (!userIdParam) {
       return jsonResponse(apiError("Missing user ID", 400), 400);

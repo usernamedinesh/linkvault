@@ -82,17 +82,19 @@ export async function get_link(c: Context): Promise<Response> {
             200
         );
 
-    }catch(err){
+    } catch(err){
         console.error("fetching link error: ", err);
         return jsonResponse(apiError("Internal server error", 500), 500);
     }
 }
 
-export async function update_link(req: Requeset): Promise<Response> {
+export async function update_link(c: Context): Promise<Response> {
     try {
-        const body = req.get("body");
 
-        const { id, title, url, tag, userId } = body;
+        const body = await c.req.json();
+        const userId = Number(c.get("userId"));
+
+        const { id, title, url, tag} = body;
 
         if (!id || isNaN(Number(id)) || !userId || isNaN(Number(userId))) {
             return jsonResponse(apiError("Invalid input", 400), 400);

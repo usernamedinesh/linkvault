@@ -39,7 +39,7 @@ export const links = pgTable("links", {
   userId: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  title: varchar("title", { length: 512 }).notNull(),
+  title: varchar("title", { length: 512 }).notNull().unique(),
   url: varchar("url", { length: 2048 }).notNull(),
   tag: varchar("tag", { length: 100 }),
   publishedAt: timestamp("published_at", { withTimezone: true }).defaultNow(),

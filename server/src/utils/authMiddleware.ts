@@ -7,7 +7,6 @@ export const authMiddleware: MiddlewareHandler = async(c, next) => {
     if (!userId) {
         //then grab userId from the token  
         const authHeader = c.req.header("Authorization");
-
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return c.json({message: "Missing or malform token"}, 401);
         }

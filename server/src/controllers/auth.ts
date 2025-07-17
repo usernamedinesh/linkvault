@@ -2,7 +2,7 @@ import { loginSchema, signupSchema, forgotPasswordSchema, newPasswordSchemaServe
 import type { ApiResponse, ApiError } from "shared";
 import { apiSuccess, apiError, jsonResponse } from "../utils/apiResponse";
 import { AppError } from "../utils/CustomError";
-import { findUserByEmail, createUser } from "../db/queries/user";
+import { findUserByEmail, createUser, get_user_profile } from "../db/queries/user";
 import { saveToken, validateExpiryAndToken, deleteToken, saveNewPassword } from "../db/queries/passwordreset";
 import { generate_token } from "../utils/token";
 import bcrypt from "bcrypt";
@@ -196,35 +196,31 @@ export async function new_password(req: Request): Promise<Response> {
 }
 
 
-export async function get_profile(c : Context, req: Request): Promise<Response> {
-    try{
-        //get the userid from params
-        const userIdParam = c.req.param('userId');
+export async function get_profile(c: Context): Promise<Response> {
+  try {
+    const userIdParam = c.req.param('userId');
 
-        if (!userIdParam) {
-            return jsonResponse(apiError("Missing  user ID", 400), 400);
-        }
-        const userId = Number(userIdParam); 
-        //get db call 
-        const user = await get_profile(userId);
-
-        if (!user) {
-            return jsonResponse(
-            apiError("not user found for this userId", 400), 400);
-        }
-        //return response
-
-        return jsonResponse(
-            apiSuccess(
-                {user},
-                "user profile fetched successfully!"
-            ),
-            200
-        );
-    }catch(err){
-        console.error("Error in getting profile");
-        return jsonResponse(apiError("Internal server error"));
+    if (!userIdParam) {
+      return jsonResponse(apiError("Missing user ID", 400), 400);
     }
 
-}
+    const userId = Number(userIdParam);
+    if (isNaN(userId)) {
+      return jsonResponse(apiError("Invalid user ID", 400), 400);
+    }
 
+    const user = await get_user_profile(userId); // uses the renamed DB function
+
+    if (!user) {
+      return jsonResponse(apiError("No user found for this userId", 404), 404);
+    }
+
+    return jsonResponse(
+      apiSuccess({ user }, "User profile fetched successfully!"),
+      200
+    );
+  } catch (err) {
+    console.error("Error in getting profile:", err);
+    return jsonResponse(apiError("Internal server error", 500), 500);
+  }
+}

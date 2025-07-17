@@ -25,3 +25,9 @@ export async function createUser({
   return result[0];
 }
 
+export async function get_user_profile(userId: number) {
+    const db = await dbPromise;
+    const result = await db.select({id: users.id, name: users.name, email: users.email}).from(users).where(eq(users.id, userId)).limit(1);
+    return result[0] || null;
+}
+

@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loginSchema, type Login}  from "shared";
 import {zodResolver } from "@hookform/resolvers/zod";
 import { client } from "../lib/client";
 import { useNavigate } from "react-router";
 
 function Login() {
+
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
     const navigate = useNavigate();
+
 
     const handleSubmit = async(e) => {
         // console.log("VITE_URL :", import.meta.env.VITE_SERVER_URL);
@@ -32,14 +35,16 @@ function Login() {
                 password,
             }
         })
-        const datas = await res.json();
-        if (datas.status === 200) {
+        const response = await res.json();
+        if (response.status === 200) {
             // console.log("TOKEN: ",datas.data.token); 
             //TODO: saving token
-            alert(datas.message);
-            navigate("/");
+            localStorage.setItem("linkToken", response.data.token);
+            alert(response.message);
+            window.location.href = "/";
+            // navigate("/");
         } else {
-            alert(datas.message);
+            alert(response.message);
         }
     };
 

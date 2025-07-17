@@ -7,7 +7,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000"
-
 type ResponseType = Awaited<ReturnType<typeof client.hello.$get>>;
 
 const client = hcWithType(SERVER_URL);

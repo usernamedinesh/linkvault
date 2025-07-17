@@ -112,16 +112,17 @@ export async function update_link(req: Requeset): Promise<Response> {
     }
 }
 
-export async function delete_link(req: Requeset): Promise<Response> {
+export async function delete_link(c: Context): Promise<Response> {
     try {
-        const linkIdParam = req.query("id");
-        const userIdParam = req.query("userId");
+        const body = await c.req.json();
+        const { linkIds } = body;
+        const userIdParam = c.get("userId");
 
-        if (!linkIdParam || !userIdParam) {
+        if (!linkIds || !userIdParam) {
             return jsonResponse(apiError("Missing link ID or user ID", 400), 400);
         }
 
-        const linkId = Number(linkIdParam);
+        const linkId = Number(linkIds);
         //TODO: check link is valid or not 
         const userId = Number(userIdParam);
 

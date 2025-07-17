@@ -70,6 +70,7 @@ const HomePage: React.FC = () => {
 
             const data = await res.json();
             if (res.ok) {
+                setLinks((prev) => prev.slice(0, -1));
                 setShowForm(false);
                 alert(data.message || "Link saved successfully!");
                 console.log("response", data);

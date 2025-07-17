@@ -1,0 +1,1 @@
+ALTER TABLE "links" ADD CONSTRAINT "links_title_unique" UNIQUE("title");

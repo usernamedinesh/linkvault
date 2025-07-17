@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { dbPromise } from "../index"; // your DB instance
+import  dbPromise  from "../index"; // your DB instance
 import { users, passwordResetTokens } from "../schema";
 import bcrypt from "bcrypt";
 

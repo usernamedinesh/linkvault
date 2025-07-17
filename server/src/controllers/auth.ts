@@ -7,6 +7,7 @@ import { saveToken, validateExpiryAndToken, deleteToken, saveNewPassword } from 
 import { generate_token } from "../utils/token";
 import bcrypt from "bcrypt";
 import { ZodError } from 'zod';
+import { Context } from "hono";
 
 // create new user 
 export async function signup(req: Request): Promise<Response> {
@@ -173,7 +174,7 @@ export async function new_password(req: Request): Promise<Response> {
         const isTokenAuthentic = await validateExpiryAndToken(user.id, token);
         if (!isTokenAuthentic) {
             return jsonResponse(
-            apiError("Invalid Token or expired", 400,),400
+            apiError("Invalid Token or expired", 400) , 400
             )
         }
         // if he is authentica then save new password
@@ -193,3 +194,37 @@ export async function new_password(req: Request): Promise<Response> {
         return jsonResponse(apiError("Internal server error", 500), 500);
     }
 }
+
+
+export async function get_profile(c : Context, req: Request): Promise<Response> {
+    try{
+        //get the userid from params
+        const userIdParam = c.req.param('userId');
+
+        if (!userIdParam) {
+            return jsonResponse(apiError("Missing  user ID", 400), 400);
+        }
+        const userId = Number(userIdParam); 
+        //get db call 
+        const user = await get_profile(userId);
+
+        if (!user) {
+            return jsonResponse(
+            apiError("not user found for this userId", 400), 400);
+        }
+        //return response
+
+        return jsonResponse(
+            apiSuccess(
+                {user},
+                "user profile fetched successfully!"
+            ),
+            200
+        );
+    }catch(err){
+        console.error("Error in getting profile");
+        return jsonResponse(apiError("Internal server error"));
+    }
+
+}
+

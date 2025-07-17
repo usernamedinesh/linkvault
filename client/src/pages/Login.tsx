@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { loginSchema, type Login}  from "shared";
 import {zodResolver } from "@hookform/resolvers/zod";
+import { client } from "../lib/client";
+import { useNavigate } from "react-router";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async(e) => {
+        // console.log("VITE_URL :", import.meta.env.VITE_SERVER_URL);
         e.preventDefault();
         const result = loginSchema.safeParse({email, password});
         if (!result.success) {
@@ -19,7 +24,23 @@ function Login() {
             return;
         }
         const data: Login = result.data;
-        console.log("Validated login data:", data);
+
+        //api call here 
+        const res = await client.api.auth.login.$post({
+            json: {
+                email,
+                password,
+            }
+        })
+        const datas = await res.json();
+        if (datas.status === 200) {
+            // console.log("TOKEN: ",datas.data.token); 
+            //TODO: saving token
+            alert(datas.message);
+            navigate("/");
+        } else {
+            alert(datas.message);
+        }
     };
 
   return (

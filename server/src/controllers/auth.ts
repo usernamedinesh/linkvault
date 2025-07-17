@@ -134,7 +134,7 @@ export async function forgot_password(req: Request): Promise<Response> {
         console.log("savedToken: ", savedToken)
         return jsonResponse(
             apiSuccess(
-                { hashedToken},
+                {rawToken, hashedToken},
                 "Token send successfully!"
             ),
             200
@@ -166,7 +166,6 @@ export async function new_password(req: Request): Promise<Response> {
 
         const { email, token, newPassword } = parsed.data;
         const user = await findUserByEmail(email);
-
         if (!user) {
             return jsonResponse(apiError("Invalid email", 401), 401);
         }
@@ -181,7 +180,6 @@ export async function new_password(req: Request): Promise<Response> {
         // if he is authentica then save new password
         const updatedUser = await saveNewPassword(user.id, newPassword);   
          await deleteToken(user.id); 
-
         return jsonResponse(
             apiSuccess(
                 {},

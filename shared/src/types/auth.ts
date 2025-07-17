@@ -84,14 +84,10 @@ export const newPasswordSchemaServer = z
         message:
           "Password must include uppercase, lowercase, number, and special character",
       }),
-    confirmPassword: z.string().min(8).max(100),
+    // confirmPassword: z.string().min(8).max(100),
     email: z.string().email(),
     token: z.string().min(10),
   })
   .strict()
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
 
 export type NewPasswordServer = z.infer<typeof newPasswordSchemaServer>;

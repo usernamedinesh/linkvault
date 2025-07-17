@@ -8,6 +8,7 @@ import { generate_token } from "../utils/token";
 import bcrypt from "bcrypt";
 import { ZodError } from 'zod';
 import { Context } from "hono";
+import { nanoid } from "nanoid";
 
 // create new user 
 export async function signup(req: Request): Promise<Response> {
@@ -103,7 +104,7 @@ export async function forgot_password(req: Request): Promise<Response> {
     try{
         const body = req.get("body");
         const parsed = forgotPasswordSchema.safeParse(body);
-
+        
         if (!parsed.success) {
           const issues = parsed.error.issues.map((issue) => ({
             field: issue.path.join('.'),
@@ -118,11 +119,10 @@ export async function forgot_password(req: Request): Promise<Response> {
 
         const { email } = parsed.data;
         const user = await findUserByEmail(email);
-
         if (!user) {
-            return jsonResponse(apiError("Invalid email", 401), 401);
+            return jsonResponse(apiError("User with this email does not exist", 404), 404);
         }
-
+        
         //DELETE THE TOKEN
          await deleteToken(user.id); 
         //GENERATE TOKEN
@@ -131,6 +131,7 @@ export async function forgot_password(req: Request): Promise<Response> {
 
         //save in db 
         const savedToken = await saveToken(user.id, hashedToken);
+        console.log("savedToken: ", savedToken)
         return jsonResponse(
             apiSuccess(
                 { hashedToken},
@@ -209,7 +210,7 @@ export async function get_profile(c: Context): Promise<Response> {
       return jsonResponse(apiError("Invalid user ID", 400), 400);
     }
 
-    const user = await get_user_profile(userId); // uses the renamed DB function
+    const user = await get_user_profile(userId)
 
     if (!user) {
       return jsonResponse(apiError("No user found for this userId", 404), 404);

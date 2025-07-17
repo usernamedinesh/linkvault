@@ -12,12 +12,14 @@ import { apiSuccess, apiError, jsonResponse } from "../utils/apiResponse";
 import { AppError } from "../utils/CustomError";
 import { isValidUserId, createLink, getLink, updateLinkById, isLinkOwnedByUser, deleteLinkById } from "../db/queries/link";
 import { ZodError } from 'zod';
+import { Context, Request } from "hono";
 
 
-export async function create_link(req: Request): Promise<Response> {
+export async function create_link(c: Context): Promise<Response> {
     try{
-        const body = req.get("body");
+        const body = await c.req.json();
         const parsed = LinkSchema.safeParse(body);
+        const userId = c.get("userId");
 
         if (!parsed.success) {
             const issues = parsed.error.issues.map((issue) => ({
@@ -30,7 +32,6 @@ export async function create_link(req: Request): Promise<Response> {
                 400
             );
         }
-        const userId = "lsf"; //TODO:  
         const { title, url, tags } = parsed.data;
 
         const isValid = await isValidUserId(userId) 
@@ -48,19 +49,17 @@ export async function create_link(req: Request): Promise<Response> {
             201
         );
 
-    }catch(err){
+    } catch(err){
         console.error("creating link error: ", err);
         return jsonResponse(apiError("Internal server error", 500), 500);
     }
 }
 
 
-export async function get_link(req: Request): Promise<Response> {
+export async function get_link(c: Context): Promise<Response> {
 
     try{
-        //TODO: get userid
-        const userIdParam = req.query("userId"); // adjust if using route params or auth
-
+        const userIdParam = await c.get("userId");
         if (!userIdParam || isNaN(Number(userIdParam))) {
             return jsonResponse(apiError("Invalid user ID", 400), 400);
         }

@@ -197,6 +197,9 @@ export async function new_password(req: Request): Promise<Response> {
 
 export async function get_profile(c: Context): Promise<Response> {
   try {
+
+    const users = c.get("user"); // accessing from middleware
+    console.log("user: ", users);
     const userIdParam = c.req.param('userId');
 
     if (!userIdParam) {

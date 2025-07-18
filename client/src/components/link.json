@@ -2,44 +2,44 @@
   {
     "id": 1,
     "url": "https://github.com",
-    "name": "GitHub",
+    "title": "GitHub",
     "tag": "code",
-    "updatedAt": "2025-07-10 14:30"
+    "publishedAt": "2025-07-10 14:30"
   },
   {
     "id": 2,
     "url": "https://youtube.com",
-    "name": "YouTube",
+    "title": "YouTube",
     "tag": "video",
-    "updatedAt": "2025-07-12 09:15"
+    "publishedAt": "2025-07-12 09:15"
   },
   {
     "id": 3,
     "url": "https://react.dev",
-    "name": "React Docs",
+    "title": "React Docs",
     "tag": "learning",
-    "updatedAt": "2025-07-11 11:00"
+    "publishedAt": "2025-07-11 11:00"
   },
   {
     "id": 4,
     "url": "https://github.com",
-    "name": "linkVault",
+    "title": "linkVault",
     "tag": "code",
-    "updatedAt": "2025-07-10 14:30"
+    "publishedAt": "2025-07-10 14:30"
   },
   {
     "id": 5,
     "url": "https://youtube.com",
-    "name": "LinkedIN",
+    "title": "LinkedIN",
     "tag": "video",
-    "updatedAt": "2025-07-12 09:15"
+    "publishedAt": "2025-07-12 09:15"
   },
   {
     "id": 6,
     "url": "https://react.dev",
-    "name": "Rust Docs",
+    "title": "Rust Docs",
     "tag": "learning",
-    "updatedAt": "2025-07-11 11:00"
+    "publishedAt": "2025-07-11 11:00"
   },
   {
     "id": 7,

@@ -6,9 +6,10 @@ import { useSidebar }  from '../context/SidebarContext';
 type LinkItem = {
     id: number;
     url: string;
-    name: string;
+    title: string;
     tag: string;
-    updatedAt: string;
+    updatedAt?: string;
+    publishedAt?: string;
 };
 
 export default function LinksList() {
@@ -30,9 +31,66 @@ export default function LinksList() {
     }, [activeId, lock, unlock]);
 
     /* load demo data */
+    // useEffect(() => {
+    //     const t = window.setTimeout(() => setLinks(), 300);
+    //     return () => window.clearTimeout(t);
+    // }, []);
+    
+    //Delete Link
+    //linkIds:id
+    const deleteLink = async(id: number) => {
+        try{
+           const token = localStorage.getItem("linkToken"); 
+            const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/link/delete-link`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    linkIds: id,
+                }),
+            })
+            const data = await res.json();
+            if (res.ok) {
+                alert(data.message || "link deleted successfully!");
+            } else {
+                alert(data.message || "Failed to fetch link!");
+                console.error("error", data);
+            }
+        }catch(err){
+            console.error(err);
+            alert("Network error, please try again.");
+        }
+    }
+
     useEffect(() => {
-        const t = window.setTimeout(() => setLinks(data), 300);
-        return () => window.clearTimeout(t);
+        async function fetchLinks() {
+            try {
+                const token = localStorage.getItem("linkToken");
+                const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/link/get-link`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    console.log("response", data.data.links);
+                    setLinks(data.data.links);
+                } else {
+                    alert(data.message || "Failed to fetch link");
+                    console.error("error", data);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Network error, please try again.");
+            }
+        }
+
+        fetchLinks(); // call the async function properly
     }, []);
 
     /* backdrop z-index: above sidebar (40) but below card overlay (70) */
@@ -56,64 +114,73 @@ export default function LinksList() {
                     sm:grid-cols-2          /* ≥640 px */
                     gap-10
                     ">
-                    {links.map(link => {
-                        const isActive = link.id === activeId;
+{links.length > 0 ? (
+  links.map(link => {
+    const isActive = link.id === activeId;
 
-                        return (
-                            <div
-                                key={link.id}
-                                onClick={() => setActiveId(link.id)}
-                                className={`
-                                relative cursor-pointer p-4 rounded-md shadow-xl transition-colors
-                                h-[150px]
-                                w-full                 /* phones */
-                                lg:w-[750px]   
-                                ${theme === 'dark'
-                                ? 'bg-gray-900 text-white hover:bg-gray-800'
-                                : 'bg-gray-400 text-black hover:bg-gray-300'}
-                                `}
-                            >
-                                {/* card body */}
-                                <div className="flex justify-between items-center">
-                                    <h3 className="text-xl sm:text-xl xs:text-lg font-semibold">
-                                        {link.name}
-                                    </h3>
-                                    <span className="text-sm opacity-80">{link.updatedAt}</span>
-                                </div>
+    return (
+      <div
+        key={link.id}
+        onClick={() => setActiveId(link.id)}
+        className={`
+          relative cursor-pointer p-4 rounded-md shadow-xl transition-colors
+          h-[150px]
+          w-full lg:w-[750px]
+          ${theme === 'dark'
+            ? 'bg-gray-900 text-white hover:bg-gray-800'
+            : 'bg-gray-400 text-black hover:bg-gray-300'}
+        `}
+      >
+        {/* card body */}
+        <div className="flex justify-between items-center">
+          <h3 className="text-xl sm:text-xl xs:text-lg font-semibold">
+            {link.title}
+          </h3>
+          <span className="text-sm opacity-80">{link.publishedAt}</span>
+        </div>
 
-                                <p className="text-base break-all underline text-blue-700">
-                                    {link.url}
-                                </p>
+        <p className="text-base break-all underline text-blue-700">
+          {link.url}
+        </p>
 
-                                <div className="mt-2 text-base">
-                                    Tag: <span className="font-medium">{link.tag}</span>
-                                </div>
+        <div className="mt-2 text-base">
+          Tag: <span className="font-medium">{link.tag}</span>
+        </div>
 
-                                {/* action overlay */}
-                                {isActive && (
-                                    <div
-                                        className="absolute inset-0 z-[70] flex items-center justify-center gap-4
-                                        bg-black/60 rounded-md"
-                                        onClick={e => e.stopPropagation()}
-                                    >
-                                        <button
-                                            className="px-4 py-2 rounded bg-amber-500 text-white"
-                                            onClick={() => console.log('Edit', link.id)}
-                                        >
-                                            Edit
-                                        </button>
+        {/* action overlay */}
+        {isActive && (
+          <div
+            className="absolute inset-0 z-[70] flex items-center justify-center gap-4 bg-black/60 rounded-md"
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              className="px-4 py-2 rounded bg-amber-500 text-white"
+              onClick={() => console.log('Edit', link.id)}
+            >
+              Edit
+            </button>
 
-                                        <button
-                                            className="px-4 py-2 rounded bg-emerald-500 text-white"
-                                            onClick={() => window.open(link.url, '_blank')}
-                                        >
-                                            Open
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
+            <button
+              className="px-4 py-2 rounded bg-emerald-500 text-white"
+              onClick={() => window.open(link.url, '_blank')}
+            >
+              Open
+            </button>
+
+            <button
+              className="px-4 py-2 rounded bg-red-500 text-white"
+              onClick={() => deleteLink(link.id)}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  })
+) : (
+  <h1>Feel free to add Links</h1>
+)}
                 </div>
             </div>
         </>

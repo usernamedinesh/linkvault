@@ -211,7 +211,7 @@ ${theme === 'dark'
                                     {/* action overlay */}
                                     {isActive && !editingLink && (
                                         <div
-                                            className="absolute inset-0 z-[70] flex items-center justify-center gap-4 bg-black/60 rounded-md"
+                                            className=" absolute inset-0 z-[70] flex items-center justify-center gap-4 bg-black/60 rounded-md"
                                             onClick={e => e.stopPropagation()}
                                         >
                                             <button
@@ -244,8 +244,17 @@ ${theme === 'dark'
                         )}
                     {/* Popup Modal for editing */}
                     {editingLink && (
-                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                            <div className="bg-white p-6 rounded shadow-lg w-96">
+
+                        <div
+                          className={`fixed inset-0 bg-opacity-50 flex items-center justify-center z-50
+                            ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-400 text-black"}
+                          `}
+                        >
+                          <div
+                            className={`p-6 rounded shadow-2xl w-96
+                              ${theme === "dark" ? "bg-gray-500 text-white" : "bg-gray-500 text-white"}
+                            `}
+                          >
                                 <h2>Edit Link</h2>
                                 <label>
                                     Url:
@@ -253,7 +262,7 @@ ${theme === 'dark'
                                         type="text"
                                         value={editingLink.url}
                                         onChange={e => handleEditChange('url', e.target.value)}
-                                        className="border p-1 w-full mb-3"
+                                        className="border p-1 w-full mb-3 text-black"
                                     />
                                 </label>
                                 <label>
@@ -262,7 +271,7 @@ ${theme === 'dark'
                                         type="text"
                                         value={editingLink.title}
                                         onChange={e => handleEditChange('title', e.target.value)}
-                                        className="border p-1 w-full mb-3"
+                                        className="border p-1 w-full mb-3 text-black"
                                     />
                                 </label>
                                 <label>
@@ -271,11 +280,11 @@ ${theme === 'dark'
                                         type="text"
                                         value={editingLink.tag}
                                         onChange={e => handleEditChange('tag', e.target.value)}
-                                        className="border p-1 w-full mb-3"
+                                        className="border p-1 w-full mb-3 text-black"
                                     />
                                 </label>
-                                <div className="flex justify-end gap-2">
-                                    <button onClick={cancelEdit} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+                                <div className="flex justify-evenly gap-2">
+                                    <button onClick={cancelEdit} className="px-4 py-2 bg-gray-300 rounded text-black">Cancel</button>
                                     <button onClick={saveEdit} className="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
                                 </div>
                             </div>

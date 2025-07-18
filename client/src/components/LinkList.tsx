@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import data from './link.json';
 import { useTheme }    from '../context/ThemeContext';
 import { useSidebar }  from '../context/SidebarContext';
+import { addLink } from "../lib/addLink";
 
 type LinkItem = {
     id: number;
@@ -12,10 +13,10 @@ type LinkItem = {
     publishedAt?: string;
 };
 
-export default function LinksList() {
+
+const LinkList = forwardRef((props, ref) => {
     const [links, setLinks]       = useState<LinkItem[]>([]);
     const [activeId, setActiveId] = useState<number | null>(null);
-
     const { theme } = useTheme();
     const {
         isOpen: sidebarOpen,
@@ -30,14 +31,19 @@ export default function LinksList() {
             else                   unlock();
     }, [activeId, lock, unlock]);
 
-    /* load demo data */
-    // useEffect(() => {
-    //     const t = window.setTimeout(() => setLinks(), 300);
-    //     return () => window.clearTimeout(t);
-    // }, []);
-    
-    //Delete Link
-    //linkIds:id
+
+      // Make addLink externally accessible
+      useImperativeHandle(ref, () => ({
+        async addAndPushLink(newLinkData: { title: string; url: string; tags: string }) {
+          const token = localStorage.getItem('linkToken');
+          const { success, data } = await addLink(token, newLinkData);
+          if (success && data?.data?.new_link) {
+            setLinks(prev => [...prev, data.data.new_link]);
+          }
+          return { success, data };
+        }
+      }));
+
     const deleteLink = async(id: number) => {
         try{
            const token = localStorage.getItem("linkToken"); 
@@ -64,6 +70,7 @@ export default function LinksList() {
         }
     }
 
+
     useEffect(() => {
         async function fetchLinks() {
             try {
@@ -78,7 +85,6 @@ export default function LinksList() {
 
                 const data = await res.json();
                 if (res.ok) {
-                    console.log("response", data.data.links);
                     setLinks(data.data.links);
                 } else {
                     alert(data.message || "Failed to fetch link");
@@ -185,5 +191,6 @@ export default function LinksList() {
             </div>
         </>
     );
-}
+})
 
+export default LinkList;

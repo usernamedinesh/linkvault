@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import LinkList from "./LinkList";
 import {useTheme} from "../context/ThemeContext";
 import Footer from  "./Footer";
 import { client } from "../lib/client";
+import { addLink } from "../lib/addLink";
 
 type LinkItem = {
     id: number;
@@ -14,6 +15,7 @@ type LinkItem = {
 const HomePage: React.FC = () => {
     const [links, setLinks] = useState<LinkItem[]>([]);
     const [showForm, setShowForm] = useState(false);
+    const linksRef = useRef<any>();
     const {theme} = useTheme()
 
     const handleAddLink = () => {
@@ -49,6 +51,22 @@ const HomePage: React.FC = () => {
     }
     //api call
     const handleSaveLink = async () => {
+      const lastLink = links[links.length - 1];
+      if (!lastLink) return alert("Link data missing.");
+
+      // ⬇️ This is the key line
+      const { success, data } = await linksRef.current.addAndPushLink(lastLink);
+
+      if (success) {
+        setLinks((prev) => prev.slice(0, -1));
+        setShowForm(false);
+        alert(data.message || "Link saved successfully!");
+      } else {
+        alert(data?.message || "Failed to save link");
+      }
+    };
+
+    const handleSaveLinkS = async () => {
         const token = localStorage.getItem("linkToken");
         const lastLink = links[links.length - 1];
         if (!lastLink) return alert("Link data missing.");
@@ -173,7 +191,8 @@ const HomePage: React.FC = () => {
                     </button>
                 </div>
             )}
-            <LinkList />
+            {/* <LinkList /> */}
+            <LinkList ref={linksRef} />
 
             {/* push footer to bottom & give it a reliable colour */}
             <div className="">

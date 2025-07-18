@@ -56,4 +56,5 @@ app.notFound((c) => {
 app.route("/", healthRouter)
 app.route("/api", routes)
 
+export type AppType = typeof app;
 export default app;

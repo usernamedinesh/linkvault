@@ -97,7 +97,7 @@ export async function update_link(c: Context): Promise<Response> {
         const body = await c.req.json();
         const userId = Number(c.get("userId"));
 
-        const { id, title, url, tag} = body;
+        const { id, title, url, tags} = body;
 
         if (!id || isNaN(Number(id)) || !userId || isNaN(Number(userId))) {
             return jsonResponse(apiError("Invalid input", 400), 400);
@@ -114,7 +114,7 @@ export async function update_link(c: Context): Promise<Response> {
             return jsonResponse(apiError("Unauthorized access", 403), 403);
         }
 
-        const updated = await updateLinkById(linkId, { title, url, tag });
+        const updated = await updateLinkById(linkId, { title, url, tag: tags });
         return jsonResponse(apiSuccess({ updated }, "Link updated successfully."), 200);
 
     } catch (err) {

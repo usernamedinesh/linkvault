@@ -1,38 +1,36 @@
-import { useState } from 'react'
-import beaver from './assets/beaver.svg'
-// import { hcWithType } from 'server/dist/client'
-import { hcWithType } from "../../server/dist/client";
-import { Routes, Route } from "react-router";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import { jwtDecode } from "jwt-decode";
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000"
-type ResponseType = Awaited<ReturnType<typeof client.hello.$get>>;
+const App = () => {
 
-const client = hcWithType(SERVER_URL);
+  useEffect(() => {
+    const token = localStorage.getItem("linkToken");
 
-function App() {
-  const [data, setData] = useState<Awaited<ReturnType<ResponseType["json"]>> | undefined>()
+    // ✅ If no token, do nothing
+    if (!token) return;
 
-  async function sendRequest() {
     try {
-      const res = await client.health.$get()
-      console.log("res", res);
-      if (!res.ok) {
-        console.log("Error fetching data")
-        return
+      const decoded: { exp: number } = jwtDecode(token);
+      const isExpired = decoded.exp * 1000 < Date.now();
+
+      if (isExpired) {
+        localStorage.removeItem("linkToken");
+      window.location.href = "/auth"
       }
-      const data = await res.json()
-      setData(data)
-    } catch (error) {
-      console.log(error)
+    } catch (err) {
+      console.error("Invalid token", err);
+      localStorage.removeItem("linkToken");
+      window.location.href = "/auth"
     }
-  }
+  }, []);
 
   return (
-        <div>
-        </div>
-  )
-}
+    <div>
+      {/* Your app routes/pages go here */}
+    </div>
+  );
+};
 
-export default App
+export default App;
+

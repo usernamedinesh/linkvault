@@ -142,12 +142,12 @@ const saveEdit = async () => {
                 if (res.ok) {
                     setLinks(data.data.links);
                 } else {
-                    alert(data.message || "Failed to fetch link");
+                    // alert(data.message || "Failed to fetch link");
                     console.error("error", data);
                 }
             } catch (err) {
                 console.error(err);
-                alert("Network error, please try again.");
+                // alert("Network error, please try again.");
             }
         }
 

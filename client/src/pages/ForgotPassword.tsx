@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router";
 import { useTheme } from "../context/ThemeContext";
+import { client } from "../lib/client";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -20,11 +21,21 @@ const ForgotPassword: React.FC = () => {
     }
 
     try {
-        //api call 
-        //if reponse is ok then navigate to the page
-        //where use can add new password
-      setSent(true);
-      navigate(`/new-password/${token}`)
+        const res = await client.api.auth["forgot-password"].$post({
+            json: {
+                email,
+            }
+        })
+        const response = await res.json();
+        if (response.status === 200) {
+            const token =  response.data.rawToken
+                console.log("token", token);
+            alert(response.message);
+          // setsent(true);
+          navigate(`/new-password/${token}`, { state: { email } });
+        } else {
+            alert(response.message);
+        }
       
     } catch (err) {
       setError('Something went wrong. Please try again.');

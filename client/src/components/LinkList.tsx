@@ -17,6 +17,7 @@ type LinkItem = {
 const LinkList = forwardRef((props, ref) => {
     const [links, setLinks]       = useState<LinkItem[]>([]);
     const [activeId, setActiveId] = useState<number | null>(null);
+    const [editingLink, setEditingLink] = useState<LinkItem | null>(null);
     const { theme } = useTheme();
     const {
         isOpen: sidebarOpen,
@@ -72,6 +73,59 @@ const LinkList = forwardRef((props, ref) => {
         }
     }
 
+    const editLink = (id: number) => {
+      const linkToEdit = links.find(link => link.id === id);
+        if (linkToEdit) setEditingLink(linkToEdit);
+    }
+      const handleEditChange = (field: keyof LinkItem, value: string) => {
+        if (!editingLink) return;
+        setEditingLink({
+          ...editingLink,
+          [field]: value,
+        });
+      };
+const saveEdit = async () => {
+  if (!editingLink) return;
+
+  const token = localStorage.getItem("linkToken");
+
+  try {
+    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/link/update-link`, {
+      method: "PUT", // or PATCH, depending on your API
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id: editingLink.id,
+        title: editingLink.title,
+        url: editingLink.url,
+        tags: editingLink.tag,  
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      // update local state with the updated link returned by the server, or editingLink if server returns nothing
+      setLinks(prev =>
+        prev.map(link => (link.id === editingLink.id ? data.data.link || editingLink : link))
+      );
+      setEditingLink(null);
+      alert(data.message || "Link updated successfully!");
+    } else {
+      alert(data.message || "Failed to update link");
+    }
+  } catch (err) {
+    console.error("Update link error:", err);
+    alert("Network error, please try again.");
+  }
+};
+
+ const cancelEdit = () => {
+    setEditingLink(null);
+  };
+
     useEffect(() => {
         async function fetchLinks() {
             try {
@@ -121,73 +175,112 @@ const LinkList = forwardRef((props, ref) => {
                     sm:grid-cols-2          /* ≥640 px */
                     gap-10
                     ">
-{links.length > 0 ? (
-  links.map(link => {
-    const isActive = link.id === activeId;
+                    {links.length > 0 ? (
+                        links.map(link => {
+                            const isActive = link.id === activeId;
 
-    return (
-      <div
-        key={link.id}
-        onClick={() => setActiveId(link.id)}
-        className={`
-          relative cursor-pointer p-4 rounded-md shadow-xl transition-colors
-          h-[150px]
-          w-full lg:w-[750px]
-          ${theme === 'dark'
-            ? 'bg-gray-900 text-white hover:bg-gray-800'
-            : 'bg-gray-400 text-black hover:bg-gray-300'}
-        `}
-      >
-        {/* card body */}
-        <div className="flex justify-between items-center">
-          <h3 className="text-xl sm:text-xl xs:text-lg font-semibold">
-            {link.title}
-          </h3>
-          <span className="text-sm opacity-80">{link.publishedAt}</span>
-        </div>
+                            return (
+                                <div
+                                    key={link.id}
+                                    onClick={() => setActiveId(link.id)}
+                                    className={`
+relative cursor-pointer p-4 rounded-md shadow-xl transition-colors
+h-[150px]
+w-full lg:w-[750px]
+${theme === 'dark'
+? 'bg-gray-900 text-white hover:bg-gray-800'
+: 'bg-gray-400 text-black hover:bg-gray-300'}
+`}
+                                >
+                                    {/* card body */}
+                                    <div className="flex justify-between items-center">
+                                        <h3 className="text-xl sm:text-xl xs:text-lg font-semibold">
+                                            {link.title}
+                                        </h3>
+                                        <span className="text-sm opacity-80">{link.publishedAt}</span>
+                                    </div>
 
-        <p className="text-base break-all underline text-blue-700">
-          {link.url}
-        </p>
+                                    <p className="text-base break-all underline text-blue-700">
+                                        {link.url}
+                                    </p>
 
-        <div className="mt-2 text-base">
-          Tag: <span className="font-medium">{link.tag}</span>
-        </div>
+                                    <div className="mt-2 text-base">
+                                        Tag: <span className="font-medium">{link.tag}</span>
+                                    </div>
 
-        {/* action overlay */}
-        {isActive && (
-          <div
-            className="absolute inset-0 z-[70] flex items-center justify-center gap-4 bg-black/60 rounded-md"
-            onClick={e => e.stopPropagation()}
-          >
-            <button
-              className="px-4 py-2 rounded bg-amber-500 text-white"
-              onClick={() => console.log('Edit', link.id)}
-            >
-              Edit
-            </button>
+                                    {/* action overlay */}
+                                    {isActive && !editingLink && (
+                                        <div
+                                            className="absolute inset-0 z-[70] flex items-center justify-center gap-4 bg-black/60 rounded-md"
+                                            onClick={e => e.stopPropagation()}
+                                        >
+                                            <button
+                                                className="px-4 py-2 rounded bg-amber-500 text-white"
+                                                onClick={() => editLink(link.id)}
+                                            >
+                                                Edit
+                                            </button>
 
-            <button
-              className="px-4 py-2 rounded bg-emerald-500 text-white"
-              onClick={() => window.open(link.url, '_blank')}
-            >
-              Open
-            </button>
+                                            <button
+                                                className="px-4 py-2 rounded bg-emerald-500 text-white"
+                                                onClick={() => window.open(link.url, '_blank')}
+                                            >
+                                                Open
+                                            </button>
 
-            <button
-              className="px-4 py-2 rounded bg-red-500 text-white"
-              onClick={() => deleteLink(link.id)}
-            >
-              Delete
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  })
-) : (
-  <h1>Feel free to add Links</h1>
-)}
+                                            <button
+                                                className="px-4 py-2 rounded bg-red-500 text-white"
+                                                onClick={() => deleteLink(link.id)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
+                    ) : (
+                            <h1>Feel free to add Links</h1>
+                        )}
+                    {/* Popup Modal for editing */}
+                    {editingLink && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="bg-white p-6 rounded shadow-lg w-96">
+                                <h2>Edit Link</h2>
+                                <label>
+                                    Url:
+                                    <input
+                                        type="text"
+                                        value={editingLink.url}
+                                        onChange={e => handleEditChange('url', e.target.value)}
+                                        className="border p-1 w-full mb-3"
+                                    />
+                                </label>
+                                <label>
+                                    Title:
+                                    <input
+                                        type="text"
+                                        value={editingLink.title}
+                                        onChange={e => handleEditChange('title', e.target.value)}
+                                        className="border p-1 w-full mb-3"
+                                    />
+                                </label>
+                                <label>
+                                    Tag:
+                                    <input
+                                        type="text"
+                                        value={editingLink.tag}
+                                        onChange={e => handleEditChange('tag', e.target.value)}
+                                        className="border p-1 w-full mb-3"
+                                    />
+                                </label>
+                                <div className="flex justify-end gap-2">
+                                    <button onClick={cancelEdit} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+                                    <button onClick={saveEdit} className="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

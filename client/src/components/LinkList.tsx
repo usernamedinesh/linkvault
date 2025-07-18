@@ -60,6 +60,8 @@ const LinkList = forwardRef((props, ref) => {
             const data = await res.json();
             if (res.ok) {
                 alert(data.message || "link deleted successfully!");
+                //remov thos from links
+              setLinks(prevLinks => prevLinks.filter(link => link.id !== id));
             } else {
                 alert(data.message || "Failed to fetch link!");
                 console.error("error", data);
@@ -69,7 +71,6 @@ const LinkList = forwardRef((props, ref) => {
             alert("Network error, please try again.");
         }
     }
-
 
     useEffect(() => {
         async function fetchLinks() {

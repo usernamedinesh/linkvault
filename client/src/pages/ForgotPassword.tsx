@@ -9,7 +9,6 @@ const ForgotPassword: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const {theme} = useTheme();
-    const token = "this_is_my_Token";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +30,7 @@ const ForgotPassword: React.FC = () => {
             const token =  response.data.rawToken
                 console.log("token", token);
             alert(response.message);
-          // setsent(true);
+          setSent(true);//TODO: this could be reason if not work
           navigate(`/new-password/${token}`, { state: { email } });
         } else {
             alert(response.message);

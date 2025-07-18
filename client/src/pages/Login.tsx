@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { loginSchema, type Login}  from "shared";
-import {zodResolver } from "@hookform/resolvers/zod";
+// import {zodResolver } from "@hookform/resolvers/zod";
 import { client } from "../lib/client";
-import { useNavigate } from "react-router";
 
 function Login() {
 
@@ -11,10 +10,9 @@ function Login() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-    const navigate = useNavigate();
 
-
-    const handleSubmit = async(e) => {
+    // const handleSubmit = async(e) => {
+       const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         // console.log("VITE_URL :", import.meta.env.VITE_SERVER_URL);
         e.preventDefault();
         const result = loginSchema.safeParse({email, password});
@@ -26,7 +24,7 @@ function Login() {
             });
             return;
         }
-        const data: Login = result.data;
+        // const data: Login = result.data;
 
         //api call here 
         const res = await client.api.auth.login.$post({

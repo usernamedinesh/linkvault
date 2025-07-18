@@ -1,13 +1,24 @@
 import { useSidebar } from '../context/SidebarContext';
 import { useAuth } from "../context/AuthContext";
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';  // use react-router-dom, not react-router
 import {
   FiX, FiLogIn, FiLock, FiLogOut,
   FiHome, FiUsers, FiMail, FiSettings, FiInfo
 } from 'react-icons/fi';
 import ThemeToggle from './ThemeToggle';
+import type { IconType } from 'react-icons';
 
-function Sidebar() {
+type NavItem =
+  | { to: string; label: string; icon: IconType; onClick?: never }
+  | { onClick: () => void; label: string; icon: IconType; to?: never };
+
+type SidebarProps = {
+  onClose: () => void;
+  isMobile: boolean;
+};
+
+  const Sidebar: React.FC<SidebarProps> = ({ onClose: _onClose, isMobile: _isMobile }) => {
+
   const { close } = useSidebar();
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
@@ -18,7 +29,8 @@ function Sidebar() {
     navigate('/auth');  // go to login
   };
 
-  const navItems = [
+  // Make sure to filter out falsey values, so navItems is NavItem[]
+  const navItems: NavItem[] = [
     !isLoggedIn && { to: '/auth', label: 'Login / Signup', icon: FiLogIn },
     isLoggedIn && { onClick: handleLogout, label: 'Logout', icon: FiLogOut },
     { to: '/forgot-password', label: 'Forgot Password', icon: FiLock },
@@ -27,7 +39,7 @@ function Sidebar() {
     { to: '/messages', label: 'Messages', icon: FiMail },
     { to: '/settings', label: 'Settings', icon: FiSettings },
     { to: '/about', label: 'About', icon: FiInfo },
-  ].filter(Boolean);
+  ].filter(Boolean) as NavItem[];
 
   return (
     <div className="fixed top-0 left-0 z-50 w-64 bg-gray-800 text-white h-full sm:h-screen transition-transform duration-300 translate-x-0 sm:relative flex flex-col">
@@ -80,7 +92,5 @@ function Sidebar() {
       </footer>
     </div>
   );
-}
-
+};
 export default Sidebar;
-

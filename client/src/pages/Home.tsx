@@ -4,6 +4,8 @@ import Sidebar from '../components/Sidebar';
 import { useTheme } from "../context/ThemeContext";
 import Hero from "../components/Hero";
 
+
+
 function Home() {
   /* ---------------- state ---------------- */
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -25,7 +27,10 @@ function Home() {
   const toggle = useCallback(() => setIsSidebarOpen(p => !p), []);
 
   /* desktop: open when mouse hits far-left edge */
-  const handleMouseMove  = e => { if (!isMobile && e.clientX <= 1) open(); };
+  // const handleMouseMove  = e => { if (!isMobile && e.clientX <= 1) open(); };
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  if (!isMobile && e.clientX <= 1) open();
+};
   const handleMouseLeave = () => { if (!isMobile) close(); };
 
   return (

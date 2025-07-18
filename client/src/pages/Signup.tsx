@@ -1,6 +1,7 @@
 import { useState } from "react"
 import {signupSchema, type Signup} from "shared";
-import { zodResolver } from "@hookform/resolvers/zod"; 
+import { client } from "../lib/client";
+// import { zodResolver } from "@hookform/resolvers/zod"; 
 
 function Signup(){
     const [name, setName] = useState("");
@@ -8,8 +9,8 @@ function Signup(){
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
         const result = signupSchema.safeParse({email, password, name });
         if (!result.success) {
             const fieldErrors = result.error.flatten().fieldErrors;
@@ -21,8 +22,22 @@ function Signup(){
 
             return;
         }
-        const data: Signup = result.data; 
-        console.log("Validated singup data: ", data);
+        const res = await client.api.auth.signup.$post({
+            json: {
+                email,
+                password,
+                name,
+            }
+        })
+        const response = await res.json();
+        if (response.status === 200) {
+            localStorage.setItem("linkToken", response.data.token);
+            alert(response.message);
+            window.location.href = "/";
+            // navigate("/");
+        } else {
+            alert(response.message);
+        }
     };
 
     return(

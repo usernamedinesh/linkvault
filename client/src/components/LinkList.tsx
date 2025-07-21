@@ -11,20 +11,22 @@ import {
 import { useTheme } from '../context/ThemeContext';
 import { useSidebar } from '../context/SidebarContext';
 import { addLink } from "../lib/addLink";
+import { LinkItem, LinkListHandle } from '../lib/types';
 
-type LinkItem = {
-  id: number;
-  url: string;
-  title: string;
-  tag: string;
-  updatedAt?: string;
-  publishedAt?: string;
-};
+// type LinkItem = {
+//   id: number;
+//   url: string;
+//   title: string;
+//   tag: string;
+//   updatedAt?: string;
+//   publishedAt?: string;
+// };
 
-export type LinkListHandle = {
-  addAndPushLink: (newLinkData: { title: string; url: string; tags: string }) => Promise<{ success: boolean; data?: any }>;
-};
+// export type LinkListHandle = {
+//   addAndPushLink: (newLinkData: { title: string; url: string; tags: string }) => Promise<{ success: boolean; data?: any }>;
+// };
 
+// const LinkList = forwardRef<LinkListHandle, {}>((_, ref) => {
 const LinkList = forwardRef<LinkListHandle, {}>((_, ref) => {
   const [links, setLinks] = useState<LinkItem[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -45,20 +47,30 @@ const LinkList = forwardRef<LinkListHandle, {}>((_, ref) => {
 
     // Make addLink externally accessible via ref
     useImperativeHandle(ref, () => ({
-      async addAndPushLink(newLinkData: { title: string; url: string; tags: string }) {
-        const token = localStorage.getItem('linkToken');
-        if (!token) {
-          // handle missing token, maybe alert or throw
-          alert("Token not found!");
-          return { success: false, data: null };
-        }
-        const { success, data } = await addLink(token, newLinkData);
-        if (success && data?.data?.new_link) {
-          setLinks(prev => [...(prev || []), data.data.new_link]); // <--- Change made here
-        }
-        return { success, data };
-      },
-    }));
+  addAndPushLink: async (newLink: LinkItem) => {
+    const token = localStorage.getItem('linkToken');
+    if (!token) {
+      alert("Token not found!");
+      return { success: false, data: null };
+    }
+
+    const { title, url, tag } = newLink;
+
+    const { success, data } = await addLink(token, {
+      title,
+      url,
+      tags: tag, // ✅ match addLink param shape
+    });
+
+    if (success && data?.data?.new_link) {
+      setLinks(prev => [...(prev || []), data.data.new_link]);
+    }
+
+    return { success, data };
+  },
+}));
+
+
 
   const deleteLink = async (id: number) => {
     try {

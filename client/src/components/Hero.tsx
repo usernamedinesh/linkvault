@@ -1,21 +1,24 @@
 import { useState, useRef } from 'react';
 import LinkList from "./LinkList";
 import Footer from "./Footer";
+import type { LinkItem, LinkListHandle } from '../lib/types';
 
-type LinkItem = {
-  id: number;
-  url: string;
-  title: string;
-  tags?: string;
-  updatedAt?: string;
-};
+// type LinkItem = {
+//   id: number;
+//   url: string;
+//   title: string;
+//   tag: string;
+//   updatedAt?: string;
+//   publishedAt?: string;
+// };
 
-type LinkListHandle = {
-  addAndPushLink: (newLink: LinkItem) => Promise<{
-    success: boolean;
-    data?: any;
-  }>;
-};
+
+// type LinkListHandle = {
+//   addAndPushLink: (newLink: LinkItem) => Promise<{
+//     success: boolean;
+//     data?: any;
+//   }>;
+// };
 
 const HomePage: React.FC = () => {
   const [links, setLinks] = useState<LinkItem[]>([]); // ✅ always an array
@@ -27,7 +30,7 @@ const HomePage: React.FC = () => {
       id: Date.now(),
       url: '',
       title: '',
-      tags: '',
+      tag: '',
       updatedAt: new Date().toLocaleString(),
     };
     setLinks((prev) => [...prev, newLink]);
@@ -66,9 +69,13 @@ const HomePage: React.FC = () => {
     if (success) {
       setLinks((prev) => prev.slice(0, -1)); // remove the empty form link
       setShowForm(false);
-      alert(data?.message || "Link saved successfully!");
+      // alert(data?.message || "Link saved successfully!");
+      alert((data as { message?: string })?.message || "Link saved successfully!");
+
     } else {
-      alert(data?.message || "Failed to save link");
+      // alert(data?.message || "Failed to save link");
+      alert((data as { message?: string })?.message || "Failed to save link!");
+
     }
   };
 
@@ -130,8 +137,8 @@ const HomePage: React.FC = () => {
                 <label className="text-sm w-12">Tag:</label>
                 <input
                   type="text"
-                  value={link.tags}
-                  onChange={(e) => handleChange(link.id, 'tags', e.target.value)}
+                  value={link.tag}
+                  onChange={(e) => handleChange(link.id, 'tag', e.target.value)}
                   className="flex-1 px-2 py-1 text-black rounded"
                   placeholder="Optional tags"
                 />
